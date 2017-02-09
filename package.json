@@ -1,0 +1,24 @@
+{
+  "name": "multiple_public_share_links",
+  "description": "Multiple public share links (Clickdummy)",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-coffee": "^1.0.0",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-connect": "^1.0.2",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-pug": "^1.0.0",
+    "grunt-contrib-sass": "^1.0.0",
+    "grunt-contrib-watch": "^1.0.0"
+  },
+  "author": "Felix Heidecke",
+  "dependencies": {
+    "jquery": "^3.1.1",
+    "uikit": "^3.0.0-beta.9"
+  }
+}

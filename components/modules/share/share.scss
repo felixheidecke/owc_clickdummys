@@ -1,0 +1,22 @@
+$grid-gutter: 12px;
+$namespace: '.share';
+
+html, body {
+    font: {
+        family: sans-serif;
+        size: 14px;
+    }
+}
+
+// Sidebard exceprt
+
+#{$namespace} {
+    max-width: 400px;
+    margin: $grid-gutter auto;
+}
+
+[js-history],
+[js-card-header],
+[js-box] {
+    display: none;
+}
