@@ -19,8 +19,8 @@ buttonAddBox.click ->
     $box
         .attr 'js-box', 'live'
         .insertAfter $('[js-entrypoint]')
-        .addClass 'uk-animation-slide-left-small'
-        .slideDown 250
+        .addClass 'uk-animation-slide-left-medium'
+        .show()
 
 $(document).on 'click', '[js-box] [js-button]', (e)->
     e.preventDefault();
@@ -31,8 +31,7 @@ $(document).on 'click', '[js-box] [js-button]', (e)->
 
     if buttonType is "cancel"
         parentBox
-            .toggleClass 'uk-animation-slide-left-small uk-animation-slide-right-small uk-animation-reverse'
-            .slideUp 250
+            .toggleClass 'uk-animation-slide-left-medium uk-animation-slide-bottom-medium uk-animation-reverse'
 
         setTimeout( ->
             parentBox.remove()
@@ -52,21 +51,8 @@ $(document).on 'keyup', '[js-input="sendmail"]', (e)->
 
 $(document).on 'click', '[js-button="save"]', (e)->
 
-    $ '[js-box="live"] [js-card-header], [js-box="live"] [js-history]'
-        .show()
-        .addClass 'uk-animation-fade'
+    UIkit.notification("Saved …", "success");
 
-    $ '[js-box="live"] [js-form]'
-        .slideUp()
-
-    $ '[js-box="live"] [js-button="cancel"]'
-        .remove()
-
-    $ '[js-box="live"] [js-button="remove"]'
-        .show()
-
-    $ '[js-box="live"] [js-button="save"]'
-        .text 'edit'
-
-    $ '[js-button="addBox"]'
-        .removeAttr 'disabled'
+#    $ '[js-box="live"] [js-card-header], [js-box="live"] [js-history]'
+#        .show()
+#        .addClass 'uk-animation-fade'
