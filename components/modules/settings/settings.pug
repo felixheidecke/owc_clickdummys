@@ -1,0 +1,39 @@
+mixin settings()
+    -var personal = [{'icon': 'cog', 'text': 'General'}, {'icon': 'server','text': 'Storage'}, {'icon': 'lock','text': 'security'}]
+    -var admin = [{'icon': 'cog', 'text': 'General'}, {'icon': 'server','text': 'Storage'}, {'icon': 'lock','text': 'encryption'}, {'icon': 'social', 'text' : 'Sharing'}, {'icon': 'bolt', 'text' : 'Firewall'}]
+    -var apps = [{'icon': 'cog', 'text': 'General'}, {'icon': 'happy', 'text': 'Smiley-App', 'disabled': true}, {'icon': 'history', 'text': 'Timemachine'}, {'icon': 'paint-bucket', 'text': 'Doodle Club'} ]
+
+    #settings
+        ul(uk-accordion="collapsible: false")
+            li.uk-background-muted.uk-padding-small
+                h3.uk-accordion-title
+                    span(uk-icon="icon: user").uk-margin-small-right
+                    span Personal
+                .uk-accordion-content
+                    ul.uk-list.uk-list-divider
+                        each i in personal
+                            li
+                                span(uk-icon="icon: " + i.icon).uk-margin-small-right
+                                a.uk-link-muted= i.text
+            li.uk-background-muted.uk-padding-small.uk-margin-small-top
+                h3.uk-accordion-title
+                    span(uk-icon="icon: settings").uk-margin-small-right
+                    span Admin
+                .uk-accordion-content
+                    ul.uk-list.uk-list-divider
+                        each i in admin
+                            li
+                                span(uk-icon="icon: " + i.icon).uk-margin-small-right
+                                a.uk-link-muted= i.text
+            li.uk-background-muted.uk-padding-small.uk-margin-small-top
+                h3.uk-accordion-title
+                    span(uk-icon="icon: thumbnails").uk-margin-small-right
+                    span Apps
+                .uk-accordion-content
+                    ul.uk-list.uk-list-divider
+                        each i in apps
+                            li
+                                span(uk-icon="icon: " + i.icon).uk-margin-small-right
+                                a.uk-link-muted= i.text
+                                if i.disabled
+                                    span.uk-badge.uk-margin-small-left.uk-background-secondary.uk-align-right(style='opacity:.2') disabled
