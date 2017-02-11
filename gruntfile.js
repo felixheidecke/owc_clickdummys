@@ -85,7 +85,7 @@ module.exports = function (grunt) {
                 }, {
                     expand: true,
                     cwd: 'node_modules/',
-                    src: ['uikit/**', 'jquery/**'],
+                    src: ['uikit/**', 'jquery/**', 'lodash/**', 'vue/**', 'moment/**'],
                     dest: 'build/lib/'
                 }],
             },

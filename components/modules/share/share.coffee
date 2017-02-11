@@ -1,58 +1,90 @@
-$(".share--tab:last-child").addClass 'uk-active'
+share = new Vue(
+    el: '#share'
+    data:
+        sidebar:
+            buttonAddLink: true
+        shares: []
+    methods:
+        addLink: ->
+            @.sidebar.buttonAddLink = false
+            @.shares.push(
+                hash: Math.random().toString(36).substring(3)
+                allowUploads: false
+                password: null
+                expires: null
+                expanded: true
+                changes: false
+                buttonSave: false
+                created: Date.now()
+                history: []
+            )
+)
 
-buttonAddBox = $ '[js-button="addBox"]'
-buttonAddBox.removeAttr 'disabled'
+Vue.component("publink"
+    template : "#publink"
+    props    : ['publink']
+    data     : ->
+        link: @.publink
+    computed:
+        linkUrl: ->
+            "http://domain.com/#{@.link.hash}"
 
-buttonAddBox.click ->
+    methods:
+        save: (e) ->
+            UIkit.notification("Saved!", 'success');
+            @.link.buttonSave = false
+            e.preventDefault()
 
-    link = Math.random().toString(36).substring(3)
+        changes: (e) ->
+            @.link.buttonSave = true
+            e.preventDefault()
 
-    $(@).prop 'disabled', true
+        edit: (e) ->
+            @.expand()
+            e.preventDefault()
 
-    $box = $('[js-box="template"]').clone()
+        close: (e) ->
+            @.collapse()
+            e.preventDefault()
 
-    $box.find('svg').remove()
+        trash: (e) ->
 
-    $box.find('[js-card-title]').text(link)
-    $box.find('[js-public-link]').text("https://domain.tld/#{link}")
+            index = @._indexOf()
 
-    $box
-        .attr 'js-box', 'live'
-        .insertAfter $('[js-entrypoint]')
-        .addClass 'uk-animation-slide-left-medium'
-        .show()
+            UIkit.modal.confirm("Delete #{@.link.hash}").then( ->
+                share.shares.splice index, 1
+                share.sidebar.buttonAddLink = true
+            , ->
+                console.log 'wimp!'
+            )
+            e.preventDefault()
 
-$(document).on 'click', '[js-box] [js-button]', (e)->
-    e.preventDefault();
+        mailto: (e)->
 
-    button     = $ @
-    buttonType = button.attr 'js-button'
-    parentBox  = button.parents('[js-box]')
+            self = @
 
-    if buttonType is "cancel"
-        parentBox
-            .toggleClass 'uk-animation-slide-left-medium uk-animation-slide-bottom-medium uk-animation-reverse'
+            UIkit.modal.prompt('Send link to:').then( (mail) ->
+                if mail
+                    self.addHistory "Send to #{mail}"
+            )
+            e.preventDefault()
 
-        setTimeout( ->
-            parentBox.remove()
-            buttonAddBox.removeAttr 'disabled'
-        , 250)
+        expand: ->
+            @.link.expanded = true
+            share.sidebar.buttonAddLink = false
 
-$(document).on 'keyup', '[js-input="sendmail"]', (e)->
+        collapse: ->
+            @.link.expanded = false
+            share.sidebar.buttonAddLink = true
 
-    $box = $(@).parents '[js-box]'
-    $button = $box.find '[js-button="save"]'
-    val = $(@).val()
+        addHistory: (event) ->
+            @.link.history.push(event)
 
-    if val.length > 0
-        $button.text 'Save & send'
-    else
-        $button.text 'Save'
+        _indexOf: ->
+            _.indexOf share.shares, @.link
 
-$(document).on 'click', '[js-button="save"]', (e)->
+    mounted: ->
+        @.addHistory "Created on " + moment(@.created).format "lll"
 
-    UIkit.notification("Saved …", "success");
 
-#    $ '[js-box="live"] [js-card-header], [js-box="live"] [js-history]'
-#        .show()
-#        .addClass 'uk-animation-fade'
+)
