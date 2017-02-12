@@ -19,29 +19,31 @@ mixin share()
 
         .uk-grid(js-entrypoint)
             div.uk-width-expand
-                button.uk-button.uk-button-primary.uk-button-small.uk-align-right.uk-margin(v-on:click="addLink", :disabled="!sidebar.buttonAddLink") Add public link
+                button.uk-button.uk-button-primary.uk-button-small.uk-align-right.uk-margin(v-on:click="addLink") Add public link
 
-        publink(v-for="share in shares", :publink="share")
+        .uk-flex.uk-flex-column-reverse.uk-margin
+            publink(v-for="share in shares", :link="share")
 
     template#publink
-        .uk-card.uk-card-default.uk-card-small.uk-margin.uk-animation-slide-left-medium
+        .uk-card.uk-card-default.uk-card-small.uk-animation-slide-left-medium.uk-margin-small-bottom
             .uk-card-header
                 .uk-grid-small.uk-flex-middle(uk-grid)
                     .uk-width-auto
                         span.uk-icon-button(uk-icon="icon: link")
 
-                    .uk-width-expand
+                    .uk-width-expand(title="Copy link to clipboard", uk-tooltip, style="cursor:pointer")
                         h3.uk-card-title.uk-margin-remove-bottom {{ link.hash }}
                         p.uk-text-meta.uk-margin-remove-top {{ linkUrl }}
                     .uk-width-auto
-                        button(v-if="!link.expanded", v-on:click="edit").uk-button.uk-button-small.uk-button-default Edit
+                        a(v-show="!link.expanded", v-on:click="expand", uk-icon="icon: chevron-left")
+                        a(v-show="link.expanded", v-on:click="collapse", uk-icon="icon: chevron-down")
 
             .uk-card-body(v-if="link.expanded")
                 form
                     fieldset.uk-fieldset
                         .uk-form-controls
                             label
-                                input.uk-checkbox(type="checkbox", v-model="link.allowUploads", @click="changes")
+                                input.uk-checkbox(type="checkbox", v-model="link.data.rw", @change="notify('Write permissions changed')")
                                 | &nbsp;&nbsp;Allow uploads
 
                         .uk-margin
@@ -50,7 +52,7 @@ mixin share()
 
                             .uk-inline.uk-width-1-1
                                 span.uk-form-icon.uk-form-icon-flip(uk-icon="icon: lock")
-                                input.uk-input(v-model="link.password", @keydown.enter="save", @change="changes", @keyup="changes", type="password", placeholder="(optional)")
+                                input.uk-input(v-model.lazy="link.data.password", @change="notify('Password changes')", type="password", placeholder="(optional)")
 
                         .uk-margin
                             label.uk-form-label(for="expiration")
@@ -59,15 +61,13 @@ mixin share()
 
                             .uk-inline.uk-inline.uk-width-1-1
                                 span.uk-form-icon.uk-form-icon-flip(uk-icon="icon: calendar")
-                                input.uk-input(v-model="link.expires", type="date", placeholder="dd.mm.yyyy", @keydown.enter="save", @change="changes", @keyup="changes", required)
+                                input.uk-input(v-model.lazy="link.data.expires", type="date", placeholder="dd.mm.yyyy", @change="notify('Expiration date changed')", required)
 
                     .uk-grid
                         div.uk-width-expand
-                            button(v-on:click="trash").uk-button.uk-button-small.uk-button-default Delete
-
-                        div.uk-width-expand.uk-text-right
-                            button(v-on:click="close").uk-button.uk-button-small.uk-button-default.uk-margin-small-right Close
-                            button(v-on:click="save", :disabled="!link.buttonSave").uk-button.uk-button-small.uk-button-primary Save
+                            button(@click="trash").uk-button.uk-button-small.uk-button-default Delete
+                        div.uk-width-expand
+                            button(v-if="modified", @click="undo").uk-button.uk-align-right.uk-button-small.uk-button-secondary Undo
 
             .uk-card-footer(v-if="link.expanded")
                 p

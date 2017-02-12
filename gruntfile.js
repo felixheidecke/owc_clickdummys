@@ -91,6 +91,14 @@ module.exports = function (grunt) {
             },
         },
 
+        /* Copy assets to build folder
+         ========================================================================== */
+
+        clean: {
+            reset: ["build"],
+            cache: [".sass-cache", ".temp.scss"]
+        },
+
         /* Watcher
          ========================================================================== */
 
@@ -111,6 +119,7 @@ module.exports = function (grunt) {
         }
     }); //initConfig
 
+    grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-coffee');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-connect');
@@ -119,6 +128,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-watch');
 
-    grunt.registerTask("default", ['pug', 'coffee', 'concat', 'sass', 'copy', 'connect', 'watch']);
+    grunt.registerTask("default", ['clean', 'pug', 'coffee', 'concat', 'sass', 'copy', 'connect', 'watch']);
+    grunt.registerTask("build", ['clean', 'pug', 'coffee', 'concat', 'sass', 'copy', 'clean:cache']);
 
 }; // wrapper

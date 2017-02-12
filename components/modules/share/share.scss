@@ -7,6 +7,21 @@ $namespace: '.share';
     margin: $grid-gutter auto;
 }
 
-[js-box] {
-    display: none;
+.oc-changes {
+    &:before,
+    &:after {
+        font-weight: 400;
+    }
+}
+
+.oc-changes:first-of-type:before {
+    content: " ";
+}
+
+.oc-changes:not(:nth-last-of-type(-n+2)):after {
+    content: ", ";
+}
+
+.oc-changes + .oc-changes:last-of-type:before {
+    content: " and ";
 }

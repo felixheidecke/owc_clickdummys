@@ -1,47 +1,35 @@
 share = new Vue(
     el: '#share'
     data:
-        sidebar:
-            buttonAddLink: true
         shares: []
     methods:
         addLink: ->
-            @.sidebar.buttonAddLink = false
             @.shares.push(
-                hash: Math.random().toString(36).substring(3)
-                allowUploads: false
-                password: null
-                expires: null
-                expanded: true
-                changes: false
-                buttonSave: false
+                hash: Math.random().toString(32).substring(2, 15)
+                data:
+                    password: null
+                    expires: null
+                    rw: false
                 created: Date.now()
+                expanded: true
                 history: []
             )
 )
 
 Vue.component("publink"
     template : "#publink"
-    props    : ['publink']
-    data     : ->
-        link: @.publink
+    props : ['link']
+    data : ->
+        modified: false
+
     computed:
         linkUrl: ->
             "http://domain.com/#{@.link.hash}"
 
     methods:
-        save: (e) ->
-            UIkit.notification("Saved!", 'success');
-            @.link.buttonSave = false
-            e.preventDefault()
-
-        changes: (e) ->
-            @.link.buttonSave = true
-            e.preventDefault()
-
-        edit: (e) ->
-            @.expand()
-            e.preventDefault()
+        notify: (e) ->
+            @.modified = true
+            UIkit.notification(e + "!", 'warning');
 
         close: (e) ->
             @.collapse()
@@ -53,7 +41,6 @@ Vue.component("publink"
 
             UIkit.modal.confirm("Delete #{@.link.hash}").then( ->
                 share.shares.splice index, 1
-                share.sidebar.buttonAddLink = true
             , ->
                 console.log 'wimp!'
             )
@@ -71,20 +58,27 @@ Vue.component("publink"
 
         expand: ->
             @.link.expanded = true
-            share.sidebar.buttonAddLink = false
 
         collapse: ->
             @.link.expanded = false
-            share.sidebar.buttonAddLink = true
 
         addHistory: (event) ->
             @.link.history.push(event)
+
+        undo: (e) ->
+            UIkit.notification("Changes undone!", 'danger');
+
+            @.modified = false
+            @.link.data.password = null
+            @.link.data.expires = null
+            @.link.data.rw = false
+
+            e.preventDefault()
 
         _indexOf: ->
             _.indexOf share.shares, @.link
 
     mounted: ->
         @.addHistory "Created on " + moment(@.created).format "lll"
-
 
 )
