@@ -4,6 +4,13 @@ share = new Vue(
         shares: []
     methods:
         addLink: ->
+
+            self = @
+            _.forEach(@.shares, (value, key) ->
+                self.shares[key].expanded = false
+                true
+            )
+
             @.shares.push(
                 hash: Math.random().toString(32).substring(2, 15)
                 data:
@@ -14,6 +21,8 @@ share = new Vue(
                 expanded: true
                 history: []
             )
+
+            true
 )
 
 Vue.component("publink"
@@ -21,6 +30,7 @@ Vue.component("publink"
     props : ['link']
     data : ->
         modified: false
+        mailedTo: null
 
     computed:
         linkUrl: ->
@@ -36,25 +46,8 @@ Vue.component("publink"
             e.preventDefault()
 
         trash: (e) ->
-
             index = @._indexOf()
-
-            UIkit.modal.confirm("Delete #{@.link.hash}").then( ->
-                share.shares.splice index, 1
-            , ->
-                console.log 'wimp!'
-            )
-            e.preventDefault()
-
-        mailto: (e)->
-
-            self = @
-
-            UIkit.modal.prompt('Send link to:').then( (mail) ->
-                if mail
-                    self.addHistory "Send to #{mail}"
-            )
-            e.preventDefault()
+            share.shares.splice index, 1
 
         expand: ->
             @.link.expanded = true

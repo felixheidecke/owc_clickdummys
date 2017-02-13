@@ -5,7 +5,7 @@ mixin share()
                 span(uk-icon="icon: folder; ratio: 2")
 
             .uk-width-expand
-                h3.uk-card-title.uk-margin-remove-bottom My little folder
+                h3.uk-card-title.uk-margin-remove-bottom My little Pony
                 p.uk-margin-remove-top
                     span.uk-text-meta Size:&nbsp;
                     span.uk-text-small 132 MB
@@ -65,7 +65,7 @@ mixin share()
 
                     .uk-grid
                         div.uk-width-expand
-                            button(@click="trash").uk-button.uk-button-small.uk-button-default Delete
+                            button(uk-toggle="target: #trash").uk-button.uk-button-small.uk-button-default Delete
                         div.uk-width-expand
                             button(v-if="modified", @click="undo").uk-button.uk-align-right.uk-button-small.uk-button-secondary Undo
 
@@ -73,8 +73,41 @@ mixin share()
                 p
                     a.uk-icon-link.uk-margin-small-right(uk-icon="icon: facebook", href="#")
                     a.uk-icon-link.uk-margin-small-right(uk-icon="icon: twitter", href="#")
-                    a.uk-icon-link.uk-margin-small-right(uk-icon="icon: mail", href="#", @click="mailto")
+                    a.uk-icon-link.uk-margin-small-right(uk-icon="icon: mail", href="#", uk-toggle="target: #send-mail", @click="mailedTo=null")
 
                 .uk-grid
                     p.uk-text-meta
                         span(v-for="event in link.history") &bull; {{ event }}<br>
+
+            #send-mail(uk-modal)
+                .uk-modal-dialog
+                    .uk-modal-header
+                        h3.uk-h3 Send Public link via mail
+
+                    .uk-modal-body
+                        .uk-margin
+                            label.uk-form-label(for="email")
+                                | Send to
+                                em *
+
+                            .uk-inline.uk-inline.uk-width-1-1
+                                span.uk-form-icon.uk-form-icon-flip(uk-icon="icon: mail")
+                                input.uk-input(type="mail", v-model.lazy="mailedTo", placeholder="max@mustermann.de", required)
+                        .uk-margin
+                            label.uk-form-label(for="mailtext") Message
+                            textarea.uk-textarea(rows="5" placeholder="(optional)")
+                        p.uk-text-meta
+                            i The email will contain the link, password and expiration-date (if set)
+                        button.uk-button.uk-button-small.uk-button-default.uk-modal-close Cancel
+                        button(@click="addHistory('Send to ' + mailedTo)").uk-button.uk-button-small.uk-button-primary.uk-align-right.uk-modal-close Send
+
+            #trash(uk-modal)
+                .uk-modal-dialog
+                    .uk-modal-header
+                        h3.uk-h3 Delete public link
+
+                    .uk-modal-body
+                        p Are you certain you want to delete?&nbsp;This <u>can not be undone</u>!
+
+                        button.uk-button.uk-button-small.uk-button-default.uk-modal-close Cancel
+                        button(@click="trash").uk-button.uk-button-small.uk-button-danger.uk-align-right.uk-modal-close Delete
