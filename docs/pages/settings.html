@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Admin Settings
+        </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300">
+        <link rel="stylesheet" href="../lib/uikit/css/uikit.min.css">
+        <link rel="stylesheet" href="../assets/css/style.css">
+        <link rel="icon" type="image/png" href="assets/gfx/favicon.png">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="../lib/uikit/js/uikit.min.js"></script>
+    </head>
+    <body>
+        <main id="main">
+            <div id="settings">
+                <ul uk-accordion="collapsible: false">
+                    <li class="uk-background-muted uk-padding-small">
+                        <h3 class="uk-accordion-title"><span class="uk-margin-small-right" uk-icon="icon: user"></span><span>Personal</span></h3>
+                        <div class="uk-accordion-content">
+                            <ul class="uk-list uk-list-divider">
+                                <li><span class="uk-margin-small-right" uk-icon="icon: cog"></span><a class="uk-link-muted">General</a></li>
+                                <li><span class="uk-margin-small-right" uk-icon="icon: server"></span><a class="uk-link-muted">Storage</a></li>
+                                <li><span class="uk-margin-small-right" uk-icon="icon: lock"></span><a class="uk-link-muted">security</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="uk-background-muted uk-padding-small uk-margin-small-top">
+                        <h3 class="uk-accordion-title"><span class="uk-margin-small-right" uk-icon="icon: settings"></span><span>Admin</span></h3>
+                        <div class="uk-accordion-content">
+                            <ul class="uk-list uk-list-divider">
+                                <li><span class="uk-margin-small-right" uk-icon="icon: cog"></span><a class="uk-link-muted">General</a></li>
+                                <li><span class="uk-margin-small-right" uk-icon="icon: server"></span><a class="uk-link-muted">Storage</a></li>
+                                <li><span class="uk-margin-small-right" uk-icon="icon: lock"></span><a class="uk-link-muted">encryption</a></li>
+                                <li><span class="uk-margin-small-right" uk-icon="icon: social"></span><a class="uk-link-muted">Sharing</a></li>
+                                <li><span class="uk-margin-small-right" uk-icon="icon: bolt"></span><a class="uk-link-muted">Firewall</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="uk-background-muted uk-padding-small uk-margin-small-top">
+                        <h3 class="uk-accordion-title"><span class="uk-margin-small-right" uk-icon="icon: thumbnails"></span><span>Apps</span></h3>
+                        <div class="uk-accordion-content">
+                            <ul class="uk-list uk-list-divider">
+                                <li><span class="uk-margin-small-right" uk-icon="icon: cog"></span><a class="uk-link-muted">General</a>
+                                </li>
+                                <li><span class="uk-margin-small-right" uk-icon="icon: happy"></span><a class="uk-link-muted">Smiley-App</a><span class="uk-badge uk-margin-small-left uk-background-secondary uk-align-right" style="opacity:.2;">disabled</span>
+                                </li>
+                                <li><span class="uk-margin-small-right" uk-icon="icon: history"></span><a class="uk-link-muted">Timemachine</a>
+                                </li>
+                                <li><span class="uk-margin-small-right" uk-icon="icon: paint-bucket"></span><a class="uk-link-muted">Doodle Club</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </main>
+        <script src="//localhost:35729/livereload.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+        <script src="../assets/js/script.js"></script>
+    </body>
+</html>

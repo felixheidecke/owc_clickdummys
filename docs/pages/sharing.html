@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Share - Clickdummy
+        </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300">
+        <link rel="stylesheet" href="../lib/uikit/css/uikit.min.css">
+        <link rel="stylesheet" href="../assets/css/style.css">
+        <link rel="icon" type="image/png" href="assets/gfx/favicon.png">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="../lib/uikit/js/uikit.min.js"></script>
+    </head>
+    <body>
+        <main id="app">
+            <div class="share" id="share">
+                <div class="uk-grid-small uk-flex-middle" uk-grid="uk-grid">
+                    <div class="uk-width-auto"><span uk-icon="icon: folder; ratio: 2"></span></div>
+                    <div class="uk-width-expand">
+                        <h3 class="uk-card-title uk-margin-remove-bottom">My little Pony</h3>
+                        <p class="uk-margin-remove-top"><span class="uk-text-meta">Size:&nbsp;</span><span class="uk-text-small">132 MB</span><span class="uk-text-meta">, &nbsp;created:&nbsp;</span><span class="uk-text-small">10 days ago</span></p>
+                    </div>
+                </div>
+                <ul class="uk-tab uk-child-width-expand">
+                    <li class="share--tab"><a href="#">Activities</a></li>
+                    <li class="share--tab"><a href="#">Comments</a></li>
+                    <li class="share--tab"><a href="#">Sharing</a></li>
+                </ul>
+                <div class="uk-grid" js-entrypoint="js-entrypoint">
+                    <div class="uk-width-expand">
+                        <button class="uk-button uk-button-primary uk-button-small uk-align-right uk-margin" v-on:click="addLink">Add public link</button>
+                    </div>
+                </div>
+                <div class="uk-flex uk-flex-column-reverse uk-margin">
+                    <publink v-for="share in shares" :link="share"></publink>
+                </div>
+            </div>
+            <template id="publink">
+                <div class="uk-card uk-card-default uk-card-small uk-animation-slide-left-medium uk-margin-small-bottom">
+                    <div class="uk-card-header">
+                        <div class="uk-grid-small uk-flex-middle" uk-grid="uk-grid">
+                            <div class="uk-width-auto"><span class="uk-icon-button" uk-icon="icon: link"></span></div>
+                            <div class="uk-width-expand" title="Copy link to clipboard" uk-tooltip="uk-tooltip" style="cursor:pointer;">
+                                <h3 class="uk-card-title uk-margin-remove-bottom">{{ link.hash }}</h3>
+                                <p class="uk-text-meta uk-margin-remove-top">{{ linkUrl }}</p>
+                            </div>
+                            <div class="uk-width-auto"><a v-show="!link.expanded" v-on:click="expand" uk-icon="icon: chevron-left"></a><a v-show="link.expanded" v-on:click="collapse" uk-icon="icon: chevron-down"></a></div>
+                        </div>
+                    </div>
+                    <div class="uk-card-body" v-if="link.expanded">
+                        <fieldset class="uk-fieldset">
+                            <div class="uk-form-controls">
+                                <label>
+                                    <input class="uk-checkbox" type="checkbox" v-model="link.data.rw" @change="notify('Write permissions changed')"/>&nbsp;&nbsp;Allow uploads
+                                </label>
+                            </div>
+                            <div class="uk-margin">
+                                <label class="uk-form-label" for="password">Password</label>
+                                <div class="uk-inline uk-width-1-1"><span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: lock"></span>
+                                    <input class="uk-input" v-model.lazy="link.data.password" @change="notify('Password changed')" type="password" placeholder="(optional)"/>
+                                </div>
+                            </div>
+                            <div class="uk-margin">
+                                <label class="uk-form-label" for="expiration">Expiration date<em>*</em></label>
+                                <div class="uk-inline uk-inline uk-width-1-1"><span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: calendar"></span>
+                                    <input class="uk-input" v-model.lazy="link.data.expires" type="date" placeholder="dd.mm.yyyy" @change="notify('Expiration date changed')" required="required"/>
+                                </div>
+                            </div>
+                            <div class="uk-grid">
+                                <div class="uk-width-expand">
+                                    <button class="uk-button uk-button-small uk-button-default" uk-toggle="target: #trash">Delete</button>
+                                </div>
+                                <div class="uk-width-expand">
+                                    <button class="uk-button uk-align-right uk-button-small uk-button-secondary" v-if="modified" @click="undo">Undo changes</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="uk-card-footer" v-if="link.expanded">
+                        <p><a class="uk-icon-link uk-margin-small-right" uk-icon="icon: facebook" href="#"></a><a class="uk-icon-link uk-margin-small-right" uk-icon="icon: twitter" href="#"></a><a class="uk-icon-link uk-margin-small-right" uk-icon="icon: mail" href="#" uk-toggle="target: #send-mail" @click="mailedTo=null"></a></p>
+                        <div class="uk-grid">
+                            <p class="uk-text-meta"><span v-for="event in link.history">&bull; {{ event }}<br></span></p>
+                        </div>
+                    </div>
+                    <div id="send-mail" uk-modal="uk-modal">
+                        <div class="uk-modal-dialog">
+                            <div class="uk-modal-header">
+                                <h3 class="uk-h3">Send Public link via mail</h3>
+                            </div>
+                            <div class="uk-modal-body">
+                                <div class="uk-margin">
+                                    <label class="uk-form-label" for="email">Send to<em>*</em></label>
+                                    <div class="uk-inline uk-inline uk-width-1-1"><span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: mail"></span>
+                                        <input class="uk-input" type="mail" v-model.lazy="mailedTo" placeholder="max@mustermann.de" required="required"/>
+                                    </div>
+                                </div>
+                                <div class="uk-margin">
+                                    <label class="uk-form-label" for="mailtext">Message</label>
+                                    <textarea class="uk-textarea" rows="5" placeholder="(optional)"></textarea>
+                                </div>
+                                <p class="uk-text-meta"><i>The email will contain the link, password and expiration-date (if set)</i></p>
+                                <button class="uk-button uk-button-small uk-button-default uk-modal-close">Cancel</button>
+                                <button class="uk-button uk-button-small uk-button-primary uk-align-right uk-modal-close" @click="addHistory('Send to ' + mailedTo)">Send</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="trash" uk-modal="uk-modal">
+                        <div class="uk-modal-dialog">
+                            <div class="uk-modal-header">
+                                <h3 class="uk-h3">Delete public link</h3>
+                            </div>
+                            <div class="uk-modal-body">
+                                <p>Are you certain you want to delete?&nbsp;This <u>can not be undone</u>!</p>
+                                <button class="uk-button uk-button-small uk-button-default uk-modal-close">Cancel</button>
+                                <button class="uk-button uk-button-small uk-button-danger uk-align-right uk-modal-close" @click="trash">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </main>
+        <script src="//localhost:35729/livereload.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+        <script src="../assets/js/script.js"></script>
+    </body>
+</html>

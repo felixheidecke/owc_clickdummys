@@ -13,7 +13,7 @@ module.exports = function (grunt) {
                 },
                 files: [{
                     src: "pages/**/*.pug",
-                    dest: "build",
+                    dest: "docs",
                     expand: true,
                     ext: ".html"
                 }]
@@ -44,7 +44,7 @@ module.exports = function (grunt) {
                     sourcemap: "none"
                 },
                 files: {
-                    'build/assets/css/style.css': '.temp.scss'
+                    'docs/assets/css/style.css': '.temp.scss'
                 }
             }
         },
@@ -52,7 +52,7 @@ module.exports = function (grunt) {
         coffee: {
             compile: {
                 files: {
-                    'build/assets/js/script.js': [
+                    'docs/assets/js/script.js': [
                         'components/modules/**/*.coffee',
                         'components/coffee/**/*.coffee'
                     ]
@@ -67,12 +67,12 @@ module.exports = function (grunt) {
             server: {
                 options: {
                     port: 5683,
-                    base: "build"
+                    base: "docs"
                 }
             }
         },
 
-        /* Copy assets to build folder
+        /* Copy assets to docs folder
          ========================================================================== */
 
         copy: {
@@ -81,21 +81,21 @@ module.exports = function (grunt) {
                     expand: true,
                     cwd: 'components/',
                     src: ['assets/**'],
-                    dest: 'build/'
+                    dest: 'docs/'
                 }, {
                     expand: true,
-                    cwd: 'node_modules/',
-                    src: ['uikit/**', 'jquery/**', 'lodash/**', 'vue/**', 'moment/**'],
-                    dest: 'build/lib/'
+                    cwd: 'node_modules/uikit/dist/',
+                    src: ['**'],
+                    dest: 'docs/lib/uikit/'
                 }],
             },
         },
 
-        /* Copy assets to build folder
+        /* Copy assets to docs folder
          ========================================================================== */
 
         clean: {
-            reset: ["build"],
+            reset: ["docs"],
             cache: [".sass-cache", ".temp.scss"]
         },
 

@@ -1,0 +1,13 @@
+html, body { padding: 12px; font-family: Roboto, sans-serif; font-size: 14px; }
+
+#settings { max-width: 400px; }
+
+.share { max-width: 400px; margin: 12px auto; }
+
+.oc-changes:before, .oc-changes:after { font-weight: 400; }
+
+.oc-changes:first-of-type:before { content: " "; }
+
+.oc-changes:not(:nth-last-of-type(-n+2)):after { content: ", "; }
+
+.oc-changes + .oc-changes:last-of-type:before { content: " and "; }
