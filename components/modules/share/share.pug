@@ -65,7 +65,7 @@ mixin share()
                     .uk-grid
                         div.uk-width-expand
                             button(uk-toggle="target: #trash").uk-button.uk-button-small.uk-button-default Delete
-                        div.uk-width-expand
+                        div.uk-width-auto
                             button(v-if="modified", @click="undo").uk-button.uk-align-right.uk-button-small.uk-button-secondary Undo changes
 
             .uk-card-footer(v-if="link.expanded")
