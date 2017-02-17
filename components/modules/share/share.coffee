@@ -1,77 +1,120 @@
-share = new Vue(
-    el: '#share'
-    data:
-        shares: []
-    methods:
-        addLink: ->
-
-            self = @
-            _.forEach(@.shares, (value, key) ->
-                self.shares[key].expanded = false
-                true
-            )
-
-            @.shares.push(
-                hash: Math.random().toString(32).substring(2, 15)
-                data:
-                    password: null
-                    expires: null
-                    rw: false
-                created: Date.now()
-                expanded: true
-                history: []
-            )
-
-            true
-)
-
-Vue.component("publink"
-    template : "#publink"
-    props : ['link']
+ModalNew =
+    template: '#modal-new'
     data : ->
-        modified: false
-        mailedTo: null
+        rw: false
+        password: null
+        expires: null
+        history: []
+        mail:
+            recipients: null
+            body: null
 
+    methods:
+
+        addHistory: (event) ->
+            @.history.push(event)
+            true
+
+        reset: ->
+            @.rw = false
+            @.password = null
+            @.expires = null
+            @.history = []
+            @.mail.recipients = null
+            @.mail.body = null
+
+        addLink: ->
+            @.addHistory "Created on #{moment(@.created).format "lll"}"
+
+            if @.mail.recipients
+                self = @
+                _.forEach( @.mail.recipients.split(' '), (mail) ->
+                    self.addHistory "Send to #{mail}"
+                )
+
+            share.shares.push(
+                hash: Math.random().toString(32).substring(2, 15)
+                created: Date.now()
+                data:
+                    password: @.password
+                    expires: @.expires
+                    rw: @.rw
+                history: @.history
+            )
+
+            @.reset()
+
+ModalEdit =
+    template : '#modal-edit'
+    props    : ['link']
+    methods  :
+
+        addHistory: (event) ->
+            @.history.push(event)
+            true
+
+        addLink: ->
+            @.addHistory "Created on #{moment(@.created).format "lll"}"
+
+            if @.mail.recipients
+                self = @
+                _.forEach( @.mail.recipients.split(' '), (mail) ->
+                    self.addHistory "Send to #{mail}"
+                )
+
+            share.shares.push(
+                hash: Math.random().toString(32).substring(2, 15)
+                created: Date.now()
+                data:
+                    password: @.password
+                    expires: @.expires
+                    rw: @.rw
+                history: @.history
+            )
+
+            @.reset()
+
+Link =
+    template : "#link"
+    props : ['link']
+    components:
+        'modalEdit': ModalEdit
     computed:
         linkUrl: ->
             "http://domain.com/#{@.link.hash}"
 
     methods:
-        notify: (e) ->
-            @.modified = true
-            UIkit.notification(e + "!", 'warning');
-
-        close: (e) ->
-            @.collapse()
-            e.preventDefault()
-
         trash: (e) ->
             index = @._indexOf()
             share.shares.splice index, 1
 
-        expand: ->
-            @.link.expanded = true
-
-        collapse: ->
-            @.link.expanded = false
-
-        addHistory: (event) ->
-            @.link.history.push(event)
-
-        undo: (e) ->
-            UIkit.notification("Changes undone!", 'danger');
-
-            @.modified = false
-            @.link.data.password = null
-            @.link.data.expires = null
-            @.link.data.rw = false
-
-            e.preventDefault()
+        edit: (e, i) ->
+            UIkit.toggle(i, {target: '#add-modal'});
+#            UIkit.toggle('#add-modal')
 
         _indexOf: ->
             _.indexOf share.shares, @.link
 
-    mounted: ->
-        @.addHistory "Created on " + moment(@.created).format "lll"
+### Vue instance ###
 
+$(document).ready ->
+#    UIkit.modal('#add-modal')[0].toggle()
+
+
+share = new Vue(
+    el: '#share'
+    components:
+        'modalNew': ModalNew
+        'modalEdit': ModalEdit
+        'publink': Link
+    data:
+        shares: []
+        modal: null
+        modaldata: null
+        create:
+            rw: false
+            password: 'otto'
+            expires: null
+            recipient: null
+            message: null
 )

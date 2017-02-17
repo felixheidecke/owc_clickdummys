@@ -9,45 +9,96 @@
 }).call(this);
 
 (function() {
-  var share;
+  var Link, ModalEdit, ModalNew, share;
 
-  share = new Vue({
-    el: '#share',
-    data: {
-      shares: []
-    },
-    methods: {
-      addLink: function() {
-        var self;
-        self = this;
-        _.forEach(this.shares, function(value, key) {
-          self.shares[key].expanded = false;
-          return true;
-        });
-        this.shares.push({
-          hash: Math.random().toString(32).substring(2, 15),
-          data: {
-            password: null,
-            expires: null,
-            rw: false
-          },
-          created: Date.now(),
-          expanded: true,
-          history: []
-        });
-        return true;
-      }
-    }
-  });
-
-  Vue.component("publink", {
-    template: "#publink",
-    props: ['link'],
+  ModalNew = {
+    template: '#modal-new',
     data: function() {
       return {
-        modified: false,
-        mailedTo: null
+        rw: false,
+        password: null,
+        expires: null,
+        history: [],
+        mail: {
+          recipients: null,
+          body: null
+        }
       };
+    },
+    methods: {
+      addHistory: function(event) {
+        this.history.push(event);
+        return true;
+      },
+      reset: function() {
+        this.rw = false;
+        this.password = null;
+        this.expires = null;
+        this.history = [];
+        this.mail.recipients = null;
+        return this.mail.body = null;
+      },
+      addLink: function() {
+        var self;
+        this.addHistory("Created on " + (moment(this.created).format("lll")));
+        if (this.mail.recipients) {
+          self = this;
+          _.forEach(this.mail.recipients.split(' '), function(mail) {
+            return self.addHistory("Send to " + mail);
+          });
+        }
+        share.shares.push({
+          hash: Math.random().toString(32).substring(2, 15),
+          created: Date.now(),
+          data: {
+            password: this.password,
+            expires: this.expires,
+            rw: this.rw
+          },
+          history: this.history
+        });
+        return this.reset();
+      }
+    }
+  };
+
+  ModalEdit = {
+    template: '#modal-edit',
+    props: ['link'],
+    methods: {
+      addHistory: function(event) {
+        this.history.push(event);
+        return true;
+      },
+      addLink: function() {
+        var self;
+        this.addHistory("Created on " + (moment(this.created).format("lll")));
+        if (this.mail.recipients) {
+          self = this;
+          _.forEach(this.mail.recipients.split(' '), function(mail) {
+            return self.addHistory("Send to " + mail);
+          });
+        }
+        share.shares.push({
+          hash: Math.random().toString(32).substring(2, 15),
+          created: Date.now(),
+          data: {
+            password: this.password,
+            expires: this.expires,
+            rw: this.rw
+          },
+          history: this.history
+        });
+        return this.reset();
+      }
+    }
+  };
+
+  Link = {
+    template: "#link",
+    props: ['link'],
+    components: {
+      'modalEdit': ModalEdit
     },
     computed: {
       linkUrl: function() {
@@ -55,42 +106,45 @@
       }
     },
     methods: {
-      notify: function(e) {
-        this.modified = true;
-        return UIkit.notification(e + "!", 'warning');
-      },
-      close: function(e) {
-        this.collapse();
-        return e.preventDefault();
-      },
       trash: function(e) {
         var index;
         index = this._indexOf();
         return share.shares.splice(index, 1);
       },
-      expand: function() {
-        return this.link.expanded = true;
-      },
-      collapse: function() {
-        return this.link.expanded = false;
-      },
-      addHistory: function(event) {
-        return this.link.history.push(event);
-      },
-      undo: function(e) {
-        UIkit.notification("Changes undone!", 'danger');
-        this.modified = false;
-        this.link.data.password = null;
-        this.link.data.expires = null;
-        this.link.data.rw = false;
-        return e.preventDefault();
+      edit: function(e, i) {
+        return UIkit.toggle(i, {
+          target: '#add-modal'
+        });
       },
       _indexOf: function() {
         return _.indexOf(share.shares, this.link);
       }
+    }
+  };
+
+
+  /* Vue instance */
+
+  $(document).ready(function() {});
+
+  share = new Vue({
+    el: '#share',
+    components: {
+      'modalNew': ModalNew,
+      'modalEdit': ModalEdit,
+      'publink': Link
     },
-    mounted: function() {
-      return this.addHistory("Created on " + moment(this.created).format("lll"));
+    data: {
+      shares: [],
+      modal: null,
+      modaldata: null,
+      create: {
+        rw: false,
+        password: 'otto',
+        expires: null,
+        recipient: null,
+        message: null
+      }
     }
   });
 
