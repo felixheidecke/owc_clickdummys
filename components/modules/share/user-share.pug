@@ -1,0 +1,19 @@
+//-
+   Created by felix on 18.02.17.
+
+mixin user-share()
+    script(type="text/x-template")#user-share
+        section(:style="order").uk-card.uk-card-default.uk-card-small.uk-animation-slide-left-medium.uk-margin-small-bottom
+            .uk-card-header
+                .uk-grid-small.uk-flex-middle(uk-grid)
+                    .uk-width-auto
+                        img.uk-border-circle(width="40", height="40", :src="avatar()")
+                    .uk-width-expand
+                        h3.uk-card-title.uk-margin-remove-bottom {{ user.name }}
+                        p(v-html="permissions").uk-text-meta.uk-margin-remove-top
+                    .uk-width-auto
+                        ul.uk-iconnav
+                            li
+                                a(uk-icon="icon: social", title="Share", uk-tooltip, type="button")
+                            li
+                                a(uk-icon="icon: cog", title="Settings", uk-tooltip)

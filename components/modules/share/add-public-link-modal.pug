@@ -1,0 +1,53 @@
+//
+   Created by felix on 17.02.17.
+
+mixin add-public-link-modal()
+    script(type="text/x-template")#add-public-link-modal
+        #add-public-link(uk-modal)
+            .uk-modal-dialog
+                .uk-modal-header
+                    h3.uk-h3 Add new link {{ title }}
+
+                .uk-modal-body
+                    fieldset.uk-fieldset
+                        .uk-form-controls
+                            label
+                                input.uk-checkbox(type="checkbox", v-model="rw")
+                                | &nbsp;&nbsp;Allow uploads
+
+                        .uk-margin
+                            label.uk-form-label(for="password")
+                                | Password
+
+                            .uk-inline.uk-width-1-1
+                                span.uk-form-icon.uk-form-icon-flip(uk-icon="icon: lock")
+                                input.uk-input(v-model.lazy="password", type="password", placeholder="(optional)")
+
+                        .uk-margin
+                            label.uk-form-label(for="expiration")
+                                | Expiration date
+                                em *
+
+                            .uk-inline.uk-inline.uk-width-1-1
+                                span.uk-form-icon.uk-form-icon-flip(uk-icon="icon: calendar")
+                                input.uk-input(v-model.lazy="expires", type="date", placeholder="dd.mm.yyyy", required)
+
+                        .uk-margin
+                            label.uk-form-label(for="mail-recipients")
+                                | Send to
+
+                            .uk-inline.uk-inline.uk-width-1-1
+                                span.uk-form-icon.uk-form-icon-flip(uk-icon="icon: mail")
+                                input.uk-input(type="mail" name="mail-recipients" v-model="mail.recipients", placeholder="max@mustermann.de", required)
+
+                            p.uk-text-small.uk-margin-small-top Use space to separate multiple mail-addresses.
+
+                        .uk-margin(v-show="mail.recipients").uk-animation-slide-top-small
+                            label.uk-form-label(for="mail-body") Message
+                            textarea.uk-textarea(rows="5" name="mail-body" v-model="mail.body" placeholder="(optional)")
+                            p.uk-text-small.uk-margin-small-top The email will contain the link, password and expiration-date
+
+                        button.uk-button.uk-button-small.uk-button-default.uk-modal-close Cancel
+                        button.uk-button.uk-button-small.uk-button-primary.uk-align-right.uk-modal-close(@click="addLink")
+                            span(v-if="!mail.recipients") Save
+                            span(v-else) Save and Send

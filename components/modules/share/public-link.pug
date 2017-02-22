@@ -1,0 +1,27 @@
+//-
+   Created by felix on 17.02.17.
+
+mixin public-link()
+    script(type="text/x-template")#public-link
+        section(:style="order").uk-card.uk-card-default.uk-card-small.uk-animation-slide-left-medium.uk-margin-small-bottom
+            .uk-card-header
+                .uk-grid-small.uk-flex-middle(uk-grid)
+                    .uk-width-auto
+                        span.uk-icon-button(uk-icon="icon: lock", v-if="link.data.password")
+                        span.uk-icon-button(uk-icon="icon: link", v-else)
+
+                    .uk-width-expand(title="Copy link to clipboard", uk-tooltip, style="cursor:pointer")
+                        h3.uk-card-title.uk-margin-remove-bottom
+                            span(v-if="link.title") {{ link.title }}
+                            span(v-else) {{ link.hash }}
+
+                        p.uk-text-meta.uk-margin-remove-top {{ linkUrl }}
+                    .uk-width-auto
+                        ul.uk-iconnav
+                            li
+                                a(uk-icon="icon: social", title="Share", uk-tooltip, type="button")
+                            li
+                                a(uk-icon="icon: cog", title="Settings", uk-tooltip, @click="edit")
+            .uk-card-body
+                p.uk-text-meta
+                    span(v-for="event in link.history") &bull; {{ event }}<br>

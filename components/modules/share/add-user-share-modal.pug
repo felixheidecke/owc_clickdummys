@@ -1,0 +1,47 @@
+//-
+   Created by felix on 17.02.17.
+
+mixin add-user-share-modal()
+    script(type="text/x-template")#add-user-share-modal
+        #add-user-share(uk-modal)
+            .uk-modal-dialog
+                .uk-modal-header
+                    h3.uk-h3 Share {{ name }} with {{ user }}
+
+                .uk-modal-body
+                    fieldset.uk-fieldset
+                        .uk-form-controls
+                            label.uk-form-label File/Folder permissions:
+                        .uk-form-controls.uk-margin-large-bottom.uk-margin-small-top
+                            label.uk-margin-medium-right
+                                input.uk-checkbox(type="checkbox", v-model="fileRead")
+                                | &nbsp;read
+
+                            label.uk-margin-medium-right
+                                input.uk-checkbox(type="checkbox", v-model="fileWrite")
+                                | &nbsp;write
+
+                            label.uk-margin-medium-right
+                                input.uk-checkbox(type="checkbox", v-model="fileChange")
+                                | &nbsp;change
+
+                            label
+                                input.uk-checkbox(type="checkbox", v-model="fileRemove")
+                                | &nbsp;remove
+
+                        .uk-form-controls
+                            label.uk-form-label Share permissions:
+                        .uk-form-controls.uk-margin-bottom.uk-margin-small-top
+                            label.uk-margin-medium-right
+                                input.uk-checkbox(type="checkbox", v-model="shareWithOthers")
+                                | &nbsp;share with users / groups
+
+                            label.uk-margin-small-right
+                                input.uk-checkbox(type="checkbox", v-model="shareWithPublic")
+                                | &nbsp;share with public
+
+                        button.uk-button.uk-button-small.uk-button-default.uk-modal-close
+                            | Cancel
+
+                        button(@click="addShare").uk-button.uk-button-small.uk-button-primary.uk-align-right.uk-modal-close.uk-margin-remove-bottom
+                            | Save

@@ -5,145 +5,60 @@ mixin share()
                 span(uk-icon="icon: folder; ratio: 2")
 
             .uk-width-expand
-                h3.uk-card-title.uk-margin-remove-bottom My little Pony
+                h3.uk-card-title.uk-margin-remove-bottom {{ file.name }}
                 p.uk-margin-remove-top
                     span.uk-text-meta Size:&nbsp;
-                    span.uk-text-small 132 MB
+                    span.uk-text-small {{ file.size }} MB
                     span.uk-text-meta , &nbsp;created:&nbsp;
-                    span.uk-text-small 10 days ago
+                    span.uk-text-small {{ file.cdate }}
 
-        ul.uk-tab.uk-child-width-expand
-            for i in ["Activities", "Comments", "Sharing"]
-                li.share--tab
-                    a(href="#") #{i}
+        ul(uk-tab).uk-child-width-expand
+            li
+                a(href="#") Activities
+            li
+                a(href="#") Comments
+            li.uk-active
+                a(href="#") Sharing
 
-        .uk-grid
-            div.uk-width-expand
-                button.uk-button.uk-button-primary.uk-button-small.uk-align-right.uk-margin(uk-toggle="target: #add-modal") Add public link
+        ul(uk-switcher).uk-subnav.uk-subnav-pill
+            li
+                a User / Group Share
+            li
+                a Public link
 
-        .uk-flex.uk-flex-column-reverse.uk-margin
-            publink(v-for="share in shares", :link="share")
+        ul.uk-switcher.uk-margin
+            li
+                .uk-margin
+                    label.uk-form-label(for="share-with-users")
+                        | Share with users and groups
 
-        modal-new()
-        //modal-edit()
-
-    script(type="text/x-template")#modal-new
-        #add-modal(uk-modal)
-            .uk-modal-dialog
-                .uk-modal-header
-                    h3.uk-h3 Add new link
-
-                .uk-modal-body
-                    fieldset.uk-fieldset
-                        .uk-form-controls
-                            label
-                                input.uk-checkbox(type="checkbox", v-model="rw")
-                                | &nbsp;&nbsp;Allow uploads
-
-                        .uk-margin
-                            label.uk-form-label(for="password")
-                                | Password
-
-                            .uk-inline.uk-width-1-1
-                                span.uk-form-icon.uk-form-icon-flip(uk-icon="icon: lock")
-                                input.uk-input(v-model.lazy="password", type="password", placeholder="(optional)")
-
-                        .uk-margin
-                            label.uk-form-label(for="expiration")
-                                | Expiration date
-                                em *
-
+                    .uk-grid-small(uk-grid)
+                        .uk-width-expand
                             .uk-inline.uk-inline.uk-width-1-1
-                                span.uk-form-icon.uk-form-icon-flip(uk-icon="icon: calendar")
-                                input.uk-input(v-model.lazy="expires", type="date", placeholder="dd.mm.yyyy", required)
+                                span.uk-form-icon.uk-form-icon-flip(uk-icon="icon: users")
+                                input.uk-input(v-model="newUser", @keyup.enter="startUserShare" type="text", placeholder="User- or Groupname")
 
-                        .uk-margin
-                            label.uk-form-label(for="mail-recipients")
-                                | Send to
-
-                            .uk-inline.uk-inline.uk-width-1-1
-                                span.uk-form-icon.uk-form-icon-flip(uk-icon="icon: mail")
-                                input.uk-input(type="mail" name="mail-recipients" v-model="mail.recipients", placeholder="max@mustermann.de", required)
-
-                            p.uk-text-small.uk-margin-small-top Use space to separate multiple mail-addresses.
-
-                        .uk-margin(v-show="mail.recipients").uk-animation-slide-top-small
-                            label.uk-form-label(for="mail-body") Message
-                            textarea.uk-textarea(rows="5" name="mail-body" v-model="mail.body" placeholder="(optional)")
-                            p.uk-text-small.uk-margin-small-top The email will contain the link, password and expiration-date
-
-                        button.uk-button.uk-button-small.uk-button-default.uk-modal-close Cancel
-                        button.uk-button.uk-button-small.uk-button-primary.uk-align-right.uk-modal-close(@click="addLink")
-                            span(v-if="!mail.recipients") Save
-                            span(v-else) Save and Send
-
-    script(type="text/x-template")#modal-edit
-        #edit-modal(uk-modal)
-            .uk-modal-dialog
-                .uk-modal-header
-                    h3.uk-h3 Edit link
-
-                .uk-modal-body
-                    fieldset.uk-fieldset
-                        .uk-form-controls
-                            label
-                                //input.uk-checkbox(type="checkbox", v-model="link.rw")
-                                | &nbsp;&nbsp;Allow uploads
-
-                        .uk-margin
-                            label.uk-form-label(for="password")
-                                | Password
-
-                            .uk-inline.uk-width-1-1
-                                span.uk-form-icon.uk-form-icon-flip(uk-icon="icon: lock")
-                                //input.uk-input(v-model.lazy="password", type="password", placeholder="(optional)")
-
-                        .uk-margin
-                            label.uk-form-label(for="expiration")
-                                | Expiration date
-                                em *
-
-                            .uk-inline.uk-inline.uk-width-1-1
-                                span.uk-form-icon.uk-form-icon-flip(uk-icon="icon: calendar")
-                                //input.uk-input(v-model.lazy="expires", type="date", placeholder="dd.mm.yyyy", required)
-
-                        //.uk-margin(v-if="!password")
-                            label.uk-form-label(for="mail-recipients")
-                                | Send to
-
-                            .uk-inline.uk-inline.uk-width-1-1
-                                span.uk-form-icon.uk-form-icon-flip(uk-icon="icon: mail")
-                                //input.uk-input(type="mail" name="mail-recipients" v-model="mail.recipients", placeholder="max@mustermann.de", required)
-
-                            p.uk-text-small.uk-margin-small-top Use space to separate multiple mail-addresses.
-
-                        //.uk-margin(v-show="mail.recipients").uk-animation-slide-top-small
-                            label.uk-form-label(for="mail-body") Message
-                            textarea.uk-textarea(rows="5" name="mail-body" v-model="mail.body" placeholder="(optional)")
-                            p.uk-text-small.uk-margin-small-top The email will contain the link, password and expiration-date
-
-                        button.uk-button.uk-button-small.uk-button-default.uk-modal-close Cancel
-                        //button.uk-button.uk-button-small.uk-button-primary.uk-align-right.uk-modal-close(@click="addLink")
-                            //span(v-if="!mail.recipients") Save
-                            span(v-else) Save and Send
-
-    script(type="text/x-template")#link
-        div
-            .uk-card.uk-card-default.uk-card-small.uk-animation-slide-left-medium.uk-margin-small-bottom
-                .uk-card-header
-                    .uk-grid-small.uk-flex-middle(uk-grid)
                         .uk-width-auto
-                            span.uk-icon-button(uk-icon="icon: link")
+                            button.uk-button.uk-button-primary(:disabled="!newUser") Share
 
-                        .uk-width-expand(title="Copy link to clipboard", uk-tooltip, style="cursor:pointer")
-                            h3.uk-card-title.uk-margin-remove-bottom {{ link.hash }}
-                            p.uk-text-meta.uk-margin-remove-top {{ linkUrl }}
+            li
+                .uk-margin
+                    label.uk-form-label(for="share-with-public")
+                        | Create public Link
+
+                    .uk-grid-small(uk-grid)
+                        .uk-width-expand
+                            .uk-inline.uk-inline.uk-width-1-1
+                                span.uk-form-icon.uk-form-icon-flip(uk-icon="icon: link")
+                                input.uk-input(v-model="newLinkTitle", type="text", placeholder="Title (optional)")
+
                         .uk-width-auto
-                            ul.uk-iconnav
-                                li
-                                    a(uk-icon="icon: social", title="Share", uk-tooltip, type="button")
-                                li
-                                    a(uk-icon="icon: cog", title="Settings", uk-tooltip, @click="edit")
-                .uk-card-body
-                    p.uk-text-meta
-                        span(v-for="event in link.history") &bull; {{ event }}<br>
+                            button.uk-button.uk-button-primary(uk-toggle="target: #add-public-link") Create
+
+        .uk-flex.uk-flex-column.uk-margin-medium-top
+            publiclink(v-for="share in shares", :link="share")
+            user-share(v-for="user in users", :user="user")
+
+        .uk-margin
+            add-public-link(:title="newLinkTitle")
+            add-user-share(:user="newUser", :name="file.name")
