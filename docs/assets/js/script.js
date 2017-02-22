@@ -1,14 +1,4 @@
 (function() {
-
-
-}).call(this);
-
-(function() {
-
-
-}).call(this);
-
-(function() {
   var addPublicLinkModal, addUserShareModal, editPublicLinkModal, publicLink, share, userShare;
 
   addUserShareModal = {
