@@ -39,7 +39,7 @@ mixin share()
                                 input.uk-input(v-model="newUser", @keyup.enter="startUserShare" type="text", placeholder="User- or Groupname")
 
                         .uk-width-auto
-                            button.uk-button.uk-button-primary(:disabled="!newUser") Share
+                            button.uk-button.uk-button-primary(:disabled="!newUser", @click="startUserShare") Share
 
             li
                 .uk-margin

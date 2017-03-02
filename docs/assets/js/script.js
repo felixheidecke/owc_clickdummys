@@ -236,7 +236,8 @@
       startUserShare: function() {
         console.log("should toggle #add-user-share");
         if (this.newUser) {
-          return UIkit.modal('#add-user-share')[0].toggle();
+          UIkit.modal('#add-user-share').toggle();
+          return true;
         }
       }
     }
