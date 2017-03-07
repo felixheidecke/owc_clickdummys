@@ -6,6 +6,8 @@ mixin share()
 
             .uk-width-expand
                 h3.uk-card-title.uk-margin-remove-bottom {{ file.name }}
+                    span(uk-icon="icon: link", uk-tooltip, title="Copy local link", style="cursor:pointer").uk-margin-small-left
+
                 p.uk-margin-remove-top
                     span.uk-text-meta Size:&nbsp;
                     span.uk-text-small {{ file.size }} MB

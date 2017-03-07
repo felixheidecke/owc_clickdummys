@@ -187,8 +187,6 @@ share = new Vue(
 
     methods:
         startUserShare: ->
-            console.log "should toggle #add-user-share"
-
             if @.newUser
                 UIkit.modal('#add-user-share').toggle()
                 true
