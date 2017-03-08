@@ -176,7 +176,7 @@ share = new Vue(
 
     data:
         file:
-            name: 'My Little Pony'
+            name: 'My Folder'
             size: 213
             cdate: moment().format "ll"
         newUser: null
