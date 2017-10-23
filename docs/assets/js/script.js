@@ -7,12 +7,12 @@
     data: function() {
       return {
         tooltipShare: "Allow " + this.user + " to share " + this.name + " with others.",
-        fileRead: true,
-        fileWrite: false,
-        fileChange: false,
+        permissions: "r+w",
         fileRemove: false,
         shareWithOthers: true,
-        shareWithPublic: false
+        shareWithPublic: false,
+        sendNotification: true,
+        expirationDate: "2017-11-01"
       };
     },
     methods: {
@@ -20,19 +20,29 @@
         share.users.push({
           created: Date.now(),
           name: this.user,
+          expires: this.expirationDate,
           perm: {
-            file: {
-              read: this.fileRead,
-              write: this.fileWrite,
-              change: this.fileChange,
-              remove: this.fileRemove
-            },
+            permissions: this.permissions,
             share: {
               others: this.shareWithOthers,
               "public": this.shareWithPublic
             }
           }
         });
+        this.reset();
+        if (this.sendNotification) {
+          return UIkit.notification(this.user + " was notified.", {
+            status: 'success',
+            pos: 'top-center'
+          });
+        }
+      },
+      reset: function() {
+        this.permissions = "r+w";
+        this.fileRemove = false;
+        this.shareWithOthers = true;
+        this.shareWithPublic = false;
+        this.sendNotification = true;
         return share.newUser = null;
       }
     },
@@ -185,12 +195,8 @@
       },
       permissions: function() {
         var indices;
-        indices = [];
-        _.forEach(this.user.perm.file, function(val, i) {
-          if (val) {
-            return indices.push(i);
-          }
-        });
+        indices = [this.user.perm.permissions.toUpperCase()];
+        indices.push(this.user.expires);
         _.forEach(this.user.perm.share, function(val, i) {
           if (val) {
             return indices.push(i);

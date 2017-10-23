@@ -66,6 +66,7 @@ module.exports = function (grunt) {
         connect: {
             server: {
                 options: {
+                    open: true,
                     port: 5683,
                     base: "docs"
                 }

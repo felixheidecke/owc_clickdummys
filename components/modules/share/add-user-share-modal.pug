@@ -11,34 +11,78 @@ mixin add-user-share-modal()
                 .uk-modal-body
                     fieldset.uk-fieldset
                         .uk-form-controls
-                            label.uk-form-label File/Folder permissions:
-                        .uk-form-controls.uk-margin-large-bottom.uk-margin-small-top
-                            label.uk-margin-medium-right
-                                input.uk-checkbox(type="checkbox", v-model="fileRead")
-                                | &nbsp;read
+                            label.uk-text-lead File/Folder permissions:
 
-                            label.uk-margin-medium-right
-                                input.uk-checkbox(type="checkbox", v-model="fileWrite")
-                                | &nbsp;write
+                        .uk-form-controls.uk-form-controls-text.uk-margin-small-bottom.uk-margin-small-top
+                            label.uk-grid
+                                div
+                                    input.uk-radio(type="radio", name="permissions", v-model="permissions", v-bind:value="'r'", style="margin-top:5px")
+                                div
+                                    span.uk-h5 Read only
+                                    br
+                                    span.uk-text-small Users can view and download contents
 
-                            label.uk-margin-medium-right
-                                input.uk-checkbox(type="checkbox", v-model="fileChange")
-                                | &nbsp;change
+                            label.uk-grid.uk-margin-small-top
+                                div
+                                    input.uk-radio(type="radio", name="permissions", v-model="permissions", v-bind:value="'r+w'", style="margin-top:5px")
+                                div
+                                    span.uk-h5 Read & Write
+                                    br
+                                    span.uk-text-small Users can view, download, edit and upload contents.
 
-                            label
-                                input.uk-checkbox(type="checkbox", v-model="fileRemove")
-                                | &nbsp;remove
+                            label.uk-grid.uk-margin-small-top
+                                div
+                                    input.uk-radio(type="radio", name="permissions", v-model="permissions", v-bind:value="'upload'", style="margin-top:5px")
+                                div
+                                    span.uk-h5 Upload only (filedrop)
+                                    br
+                                    span.uk-text-small Receive files from others without revealing the contents of the folder.
+
+                        hr.uk-hr
 
                         .uk-form-controls
-                            label.uk-form-label Share permissions:
-                        .uk-form-controls.uk-margin-bottom.uk-margin-small-top
-                            label.uk-margin-medium-right
-                                input.uk-checkbox(type="checkbox", v-model="shareWithOthers")
-                                | &nbsp;share with users / groups
+                            label.uk-text-lead Share permissions:
 
-                            label.uk-margin-small-right
-                                input.uk-checkbox(type="checkbox", v-model="shareWithPublic")
-                                | &nbsp;share with public
+                        .uk-form-controls.uk-form-controls-text.uk-margin-small-bottom.uk-margin-small-top
+                            label.uk-grid
+                                div
+                                    input.uk-checkbox(type="checkbox", name="shareWithOthers", v-model="shareWithOthers", style="margin-top:5px")
+                                div
+                                    span.uk-h5 Share with users / groups
+                                    br
+                                    span.uk-text-small Allow users to share this folder with users inside ownCloud
+
+                            label.uk-grid.uk-margin-small-top
+                                div
+                                    input.uk-checkbox(type="checkbox", name="shareWithPublic", v-model="shareWithPublic", style="margin-top:5px")
+                                div
+                                    span.uk-h5 Share with public
+                                    br
+                                    span.uk-text-small Allow sharing with others using a public link or a federated share
+
+                        hr.uk-hr
+
+                        .uk-form-controls.uk-form-controls-text.uk-margin-large-bottom.uk-margin-small-top
+                            label.uk-grid.uk-margin-small-top
+                                div
+                                    input.uk-checkbox(type="checkbox", name="sendNotification", v-model="sendNotification", style="margin-top:5px")
+                                div
+                                    span.uk-h5 Send notification
+                                    br
+                                    span.uk-text-small The recipient will be notified about this share via email
+
+                        hr.uk-hr
+
+                        .uk-form-controls
+                            label.uk-text-lead Set expiration date:
+
+                        .uk-form-controls.uk-form-controls-text.uk-margin-large-bottom.uk-margin-small-top
+                            .uk-inline
+                                a.uk-form-icon(href="#", uk-icon="icon: calendar")
+                                input.uk-input(type="date", v-model="expirationDate")
+
+                            p.uk-text-small
+                                span(v-if="expirationDate") This share will expire on {{ expirationDate }}
 
                         button.uk-button.uk-button-small.uk-button-default.uk-modal-close
                             | Cancel

@@ -3,12 +3,12 @@ addUserShareModal =
     props: ['user', 'name']
     data: ->
         tooltipShare: "Allow #{@.user} to share #{@.name} with others."
-        fileRead: true
-        fileWrite: false
-        fileChange: false
+        permissions: "r+w"
         fileRemove: false
         shareWithOthers: true
         shareWithPublic: false
+        sendNotification: true
+        expirationDate: "2017-11-01"
 
     methods:
         addShare: ->
@@ -17,17 +17,28 @@ addUserShareModal =
             share.users.push(
                 created: Date.now()
                 name: @.user
+                expires: @.expirationDate
                 perm:
-                    file:
-                        read   : @.fileRead
-                        write  : @.fileWrite
-                        change : @.fileChange
-                        remove : @.fileRemove
+                    permissions : @.permissions
                     share:
                         others : @.shareWithOthers
                         public : @.shareWithPublic
             )
 
+            @.reset()
+
+            if @.sendNotification
+                UIkit.notification("#{@.user} was notified." , {
+                    status:'success',
+                    pos: 'top-center'
+                });
+
+        reset: ->
+            @.permissions =  "r+w"
+            @.fileRemove = false
+            @.shareWithOthers = true
+            @.shareWithPublic = false
+            @.sendNotification = true
             share.newUser = null
 
     watch:
@@ -153,8 +164,9 @@ userShare =
             "order:#{-@.user.created.toString().substr(7,3)}"
 
         permissions: ->
-            indices = []
-            _.forEach(@.user.perm.file, (val, i) ->  indices.push i if val )
+
+            indices = [@.user.perm.permissions.toUpperCase()]
+            indices.push(@.user.expires)
             _.forEach(@.user.perm.share, (val, i) ->  indices.push i if val )
             _.join(indices, ', ')
 

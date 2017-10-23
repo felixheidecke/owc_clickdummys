@@ -124,32 +124,64 @@ Created by felix on 17.02.17.
                         <div class="uk-modal-body">
                             <fieldset class="uk-fieldset">
                                 <div class="uk-form-controls">
-                                    <label class="uk-form-label">File/Folder permissions:</label>
+                                    <label class="uk-text-lead">File/Folder permissions:</label>
                                 </div>
-                                <div class="uk-form-controls uk-margin-large-bottom uk-margin-small-top">
-                                    <label class="uk-margin-medium-right">
-                                        <input class="uk-checkbox" type="checkbox" v-model="fileRead"/>&nbsp;read
+                                <div class="uk-form-controls uk-form-controls-text uk-margin-small-bottom uk-margin-small-top">
+                                    <label class="uk-grid">
+                                        <div>
+                                            <input class="uk-radio" type="radio" name="permissions" v-model="permissions" v-bind:value="'r'" style="margin-top:5px;"/>
+                                        </div>
+                                        <div><span class="uk-h5">Read only</span><br/><span class="uk-text-small">Users can view and download contents</span></div>
                                     </label>
-                                    <label class="uk-margin-medium-right">
-                                        <input class="uk-checkbox" type="checkbox" v-model="fileWrite"/>&nbsp;write
+                                    <label class="uk-grid uk-margin-small-top">
+                                        <div>
+                                            <input class="uk-radio" type="radio" name="permissions" v-model="permissions" v-bind:value="'r+w'" style="margin-top:5px;"/>
+                                        </div>
+                                        <div><span class="uk-h5">Read & Write</span><br/><span class="uk-text-small">Users can view, download, edit and upload contents.</span></div>
                                     </label>
-                                    <label class="uk-margin-medium-right">
-                                        <input class="uk-checkbox" type="checkbox" v-model="fileChange"/>&nbsp;change
-                                    </label>
-                                    <label>
-                                        <input class="uk-checkbox" type="checkbox" v-model="fileRemove"/>&nbsp;remove
+                                    <label class="uk-grid uk-margin-small-top">
+                                        <div>
+                                            <input class="uk-radio" type="radio" name="permissions" v-model="permissions" v-bind:value="'upload'" style="margin-top:5px;"/>
+                                        </div>
+                                        <div><span class="uk-h5">Upload only (filedrop)</span><br/><span class="uk-text-small">Receive files from others without revealing the contents of the folder.</span></div>
                                     </label>
                                 </div>
+                                <hr class="uk-hr"/>
                                 <div class="uk-form-controls">
-                                    <label class="uk-form-label">Share permissions:</label>
+                                    <label class="uk-text-lead">Share permissions:</label>
                                 </div>
-                                <div class="uk-form-controls uk-margin-bottom uk-margin-small-top">
-                                    <label class="uk-margin-medium-right">
-                                        <input class="uk-checkbox" type="checkbox" v-model="shareWithOthers"/>&nbsp;share with users / groups
+                                <div class="uk-form-controls uk-form-controls-text uk-margin-small-bottom uk-margin-small-top">
+                                    <label class="uk-grid">
+                                        <div>
+                                            <input class="uk-checkbox" type="checkbox" name="shareWithOthers" v-model="shareWithOthers" style="margin-top:5px;"/>
+                                        </div>
+                                        <div><span class="uk-h5">Share with users / groups</span><br/><span class="uk-text-small">Allow users to share this folder with users inside ownCloud</span></div>
                                     </label>
-                                    <label class="uk-margin-small-right">
-                                        <input class="uk-checkbox" type="checkbox" v-model="shareWithPublic"/>&nbsp;share with public
+                                    <label class="uk-grid uk-margin-small-top">
+                                        <div>
+                                            <input class="uk-checkbox" type="checkbox" name="shareWithPublic" v-model="shareWithPublic" style="margin-top:5px;"/>
+                                        </div>
+                                        <div><span class="uk-h5">Share with public</span><br/><span class="uk-text-small">Allow sharing with others using a public link or a federated share</span></div>
                                     </label>
+                                </div>
+                                <hr class="uk-hr"/>
+                                <div class="uk-form-controls uk-form-controls-text uk-margin-large-bottom uk-margin-small-top">
+                                    <label class="uk-grid uk-margin-small-top">
+                                        <div>
+                                            <input class="uk-checkbox" type="checkbox" name="sendNotification" v-model="sendNotification" style="margin-top:5px;"/>
+                                        </div>
+                                        <div><span class="uk-h5">Send notification</span><br/><span class="uk-text-small">The recipient will be notified about this share via email</span></div>
+                                    </label>
+                                </div>
+                                <hr class="uk-hr"/>
+                                <div class="uk-form-controls">
+                                    <label class="uk-text-lead">Set expiration date:</label>
+                                </div>
+                                <div class="uk-form-controls uk-form-controls-text uk-margin-large-bottom uk-margin-small-top">
+                                    <div class="uk-inline"><a class="uk-form-icon" href="#" uk-icon="icon: calendar"></a>
+                                        <input class="uk-input" type="date" v-model="expirationDate"/>
+                                    </div>
+                                    <p class="uk-text-small"><span v-if="expirationDate">This share will expire on {{ expirationDate }}</span></p>
                                 </div>
                                 <button class="uk-button uk-button-small uk-button-default uk-modal-close">Cancel</button>
                                 <button class="uk-button uk-button-small uk-button-primary uk-align-right uk-modal-close uk-margin-remove-bottom" @click="addShare">Save</button>
